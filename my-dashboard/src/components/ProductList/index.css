@@ -1,0 +1,111 @@
+.container {
+    width: 1170px;
+    max-width: calc(100% - 48px);
+    margin: 0 auto;
+}
+
+.products {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    gap: 2px;
+}
+
+.product__header-row {
+    display: grid;
+    background-color: var(--color-secondary);
+    grid-template-columns: 60px 100px 1fr 100px 150px 150px;
+    gap: 2px;
+}
+
+.product__header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    padding: 16px;
+}
+
+.product__row {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px 150px 150px 150px;
+    gap: 2px;
+    transition: background-color 0.2s;
+}
+
+.product__row:hover .product__cell {
+    background-color: var(--color-hover);
+}
+
+.product__cell {
+    background-color: #666672;
+    font-size: 14px;
+    padding: 16px;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product__row--dark .product__cell {
+    background-color: var(--color-surface);
+}
+
+.product__action-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.product__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.product__view-btn {
+    background-color: aqua;
+}
+
+.product__delete-btn {
+    background-color: red;
+}
+
+.product__edit-btn {
+    background-color: yellow;
+}
+
+.product__action-btn:hover {
+    background-color: rgba(194, 4, 4, 0.593);
+}
+
+/* Checkbox column */
+.product__header:first-child,
+.product__cell:first-child {
+    justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product__header-row,
+    .product__row {
+        grid-template-columns: 60px 80px 1fr 80px;
+    }
+
+    /* Hide Created and Last Updated columns on mobile */
+    .product__header:nth-child(5),
+    .product__header:nth-child(6),
+    .product__cell:nth-child(5),
+    .product__cell:nth-child(6) {
+        display: none;
+    }
+}

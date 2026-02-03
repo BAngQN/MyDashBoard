@@ -26,6 +26,8 @@ export const productApi = {
         const total = products.length;
         const totalPages = Math.ceil(total / limit);
 
+        console.log(paginatedData);
+
         return {
             data: {
                 data: paginatedData,

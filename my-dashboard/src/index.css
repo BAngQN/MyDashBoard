@@ -1,18 +1,10 @@
-/* CSS Reset and Base Styles */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 /* CSS Custom Properties (Variables) */
 :root {
     /* Colors */
     --color-primary: #646cff;
     --color-primary-dark: #535bf2;
     --color-secondary: #f4f4f5;
+    --color-secondary-light: #dfdfec;
     --color-surface: #ffffff;
     --color-background: #fafafa;
     --color-border: #e4e4e7;
@@ -58,8 +50,9 @@
         --color-border: #27272a;
         --color-text: #fafafa;
         --color-text-secondary: #a1a1aa;
-        --color-hover: #27272a;
+        --color-hover: #72727e;
         --color-secondary: #27272a;
+        --color-secondary-light: #76767e;
     }
 }
 
@@ -72,8 +65,6 @@ body {
     margin: 0;
     font-family: var(--font-family);
     line-height: var(--line-height-base);
-    color: var(--color-text);
-    background-color: var(--color-background);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
