@@ -1,14 +1,40 @@
 import "./index.css";
 import type { Product } from "../../types";
+import { useNavigate } from "react-router-dom";
+import { productApi } from "@/utils/mockApi";
 
 interface ProductListProps {
     products: Product[];
+    onDelete: (productId: string) => void;
 }
 
-function ProductList({ products }: ProductListProps) {
+function ProductList({ products, onDelete }: ProductListProps) {
+    const navigate = useNavigate();
+    const onProductDetailClick = (productId: string) => {
+        navigate(`/product/${productId}`);
+    };
+
+    const handleDeleteItem = async (productId: string) => {
+        const response = await productApi.deleteProduct(productId);
+        if (!response.success) {
+            console.error("Failed to delete product:", response.message);
+            return;
+        }
+        onDelete(productId);
+    };
+
+    const onCreateNewClick = () => {
+        navigate(`/product/new`);
+    };
     return (
-        <div className="container">
-            <div className="products">
+        <div className="container products">
+            <div className="product-header">
+                <button onClick={onCreateNewClick}>
+                    <i className="fa-solid fa-plus"></i>
+                    Create New
+                </button>
+            </div>
+            <div className="product-body">
                 {/* Header Row */}
                 <div className="product__header-row">
                     <div className="product__header">Order</div>
@@ -27,6 +53,8 @@ function ProductList({ products }: ProductListProps) {
                         <div
                             key={product.id}
                             className={`product__row ${darkCellClass}`}
+                            onClick={() => onProductDetailClick(product.id)}
+                            style={{ cursor: "pointer" }}
                         >
                             <div className="product__cell">{product.id}</div>
                             <div className="product__cell">{product.name}</div>
@@ -38,7 +66,14 @@ function ProductList({ products }: ProductListProps) {
                                 {product.updatedAt}
                             </div>
                             <div className="product__cell product__actions">
-                                <button className="product__action-btn product__delete-btn">
+                                <button
+                                    className="product__action-btn product__delete-btn"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleDeleteItem(product.id);
+                                    }}
+                                >
                                     Delete
                                 </button>
                             </div>

@@ -1,9 +1,13 @@
 import { useEffect, useReducer } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
 import ProductList from "./components/ProductList";
+import ProductDetail from "./components/ProductDetail";
 import { productApi } from "./utils/mockApi";
 import type { Product } from "./types";
 import dashboardIcon from "./assets/icon/ic_dashboard.png";
+import ProductForm from "./components/ProductForm";
+import ProductCreate from "./components/ProductCreate";
 
 // Action type constants
 const ProductActionType = {
@@ -24,6 +28,14 @@ type ProductAction =
     | { type: typeof ProductActionType.DELETE; payload: { id: string } };
 
 function App() {
+    return (
+        <BrowserRouter>
+            <AppComponentWrapper />
+        </BrowserRouter>
+    );
+}
+
+function AppComponentWrapper() {
     const [products, dispatch] = useReducer(productReducer, []);
     useEffect(() => {
         //fetch products from API
@@ -40,6 +52,23 @@ function App() {
         };
         fetchProducts();
     }, []);
+
+    const updateProduct = (
+        updatedProduct: Partial<Product> & { id: string },
+    ) => {
+        console.log("Updating product in App.tsx:", updatedProduct);
+        dispatch({
+            type: ProductActionType.UPDATE,
+            payload: updatedProduct,
+        });
+    };
+
+    const deleteProduct = (productId: string) => {
+        dispatch({
+            type: ProductActionType.DELETE,
+            payload: { id: productId },
+        });
+    };
     return (
         <div className="app">
             <figure className="app__dashboard-img">
@@ -49,7 +78,39 @@ function App() {
                     alt=""
                 />
             </figure>
-            <ProductList products={products} />
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <ProductList
+                            products={products}
+                            onDelete={deleteProduct}
+                        />
+                    }
+                />
+                <Route
+                    path="/product/:id"
+                    element={<ProductDetail onUpdate={updateProduct} />}
+                />
+
+                <Route
+                    path="/product/new"
+                    element={
+                        <ProductCreate
+                            onHandleSubmit={(product: Product) => {
+                                console.log(
+                                    "Adding product in App.tsx:",
+                                    product,
+                                );
+                                dispatch({
+                                    type: ProductActionType.ADD,
+                                    payload: product,
+                                });
+                            }}
+                        />
+                    }
+                />
+            </Routes>
         </div>
     );
 }
@@ -61,17 +122,23 @@ function productReducer(products: Product[], action: ProductAction) {
         case ProductActionType.ADD:
             return [...products, action.payload];
         case ProductActionType.UPDATE: {
+            const updateDate = new Date().toISOString().split("T")[0];
             return products.map((product) =>
                 product.id === action.payload.id
                     ? {
                           ...product,
                           ...action.payload,
-                          lastedAt: new Date().toISOString(),
+                          updatedAt: updateDate,
                       }
                     : product,
             );
         }
         case ProductActionType.DELETE: {
+            console.log(
+                "Deleting product in reducer:",
+                products,
+                action.payload.id,
+            );
             return products.filter(
                 (product) => product.id !== action.payload.id,
             );
